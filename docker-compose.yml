@@ -1,0 +1,22 @@
+version: '3.3'
+
+services:
+  tradiary:
+    build: .
+    volumes:
+      - $PWD/db.sqlite3:/app/db.sqlite3:rw
+      - $PWD/.env:/app/.env:ro
+    ports:
+      - '127.0.0.1:8000:8000'
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.update_quotes.schedule: "@every 3h"
+      ofelia.job-exec.update_quotes.command: "/app/manage.py update_quotes"
+
+  ofelia:
+    image: mcuadros/ofelia:latest
+    depends_on:
+      - tradiary
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

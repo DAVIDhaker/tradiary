@@ -1,0 +1,218 @@
+- model: app_trade.asset
+  pk: 2
+  fields:
+    market_symbol: BNB
+- model: app_trade.asset
+  pk: 3
+  fields:
+    market_symbol: TWT
+- model: app_trade.asset
+  pk: 4
+  fields:
+    market_symbol: ETH
+- model: app_trade.asset
+  pk: 5
+  fields:
+    market_symbol: ETC
+- model: app_trade.asset
+  pk: 6
+  fields:
+    market_symbol: 1INCH
+- model: app_trade.asset
+  pk: 7
+  fields:
+    market_symbol: USD
+- model: app_trade.asset
+  pk: 8
+  fields:
+    market_symbol: DODO
+- model: app_trade.asset
+  pk: 9
+  fields:
+    market_symbol: CRV
+- model: app_trade.asset
+  pk: 10
+  fields:
+    market_symbol: BTC
+- model: app_trade.asset
+  pk: 11
+  fields:
+    market_symbol: LTC
+- model: app_trade.asset
+  pk: 12
+  fields:
+    market_symbol: BTG
+- model: app_trade.asset
+  pk: 13
+  fields:
+    market_symbol: BCH
+- model: app_trade.asset
+  pk: 14
+  fields:
+    market_symbol: XRP
+- model: app_trade.asset
+  pk: 15
+  fields:
+    market_symbol: BICO
+- model: app_trade.asset
+  pk: 16
+  fields:
+    market_symbol: SOL
+- model: app_trade.asset
+  pk: 17
+  fields:
+    market_symbol: DASH
+- model: app_trade.asset
+  pk: 18
+  fields:
+    market_symbol: GMT
+- model: app_trade.asset
+  pk: 19
+  fields:
+    market_symbol: DOT
+- model: app_trade.asset
+  pk: 20
+  fields:
+    market_symbol: DOGE
+- model: app_trade.asset
+  pk: 21
+  fields:
+    market_symbol: MATIC
+- model: app_trade.asset
+  pk: 22
+  fields:
+    market_symbol: DAI
+- model: app_trade.asset
+  pk: 23
+  fields:
+    market_symbol: YFI
+- model: app_trade.asset
+  pk: 24
+  fields:
+    market_symbol: LUNA
+- model: app_trade.asset
+  pk: 25
+  fields:
+    market_symbol: ADA
+- model: app_trade.asset
+  pk: 26
+  fields:
+    market_symbol: AVAX
+- model: app_trade.asset
+  pk: 27
+  fields:
+    market_symbol: SHIB
+- model: app_trade.asset
+  pk: 28
+  fields:
+    market_symbol: LINK
+- model: app_trade.asset
+  pk: 29
+  fields:
+    market_symbol: ATOM
+- model: app_trade.asset
+  pk: 30
+  fields:
+    market_symbol: UNI
+- model: app_trade.asset
+  pk: 31
+  fields:
+    market_symbol: MANA
+- model: app_trade.asset
+  pk: 32
+  fields:
+    market_symbol: KCS
+- model: app_trade.asset
+  pk: 33
+  fields:
+    market_symbol: HT
+- model: app_trade.pair
+  pk: 1
+  fields:
+    base_asset: 7
+    second_asset: 2
+    current_quote: '390.45606092'
+- model: app_trade.pair
+  pk: 2
+  fields:
+    base_asset: 7
+    second_asset: 14
+    current_quote: '0.61983515'
+- model: app_trade.pair
+  pk: 3
+  fields:
+    base_asset: 7
+    second_asset: 3
+    current_quote: '0.98514114'
+- model: app_trade.pair
+  pk: 4
+  fields:
+    base_asset: 7
+    second_asset: 13
+    current_quote: '287.07703780'
+- model: app_trade.pair
+  pk: 5
+  fields:
+    base_asset: 10
+    second_asset: 7
+    current_quote: '0.00002563'
+- model: app_trade.pair
+  pk: 6
+  fields:
+    base_asset: 7
+    second_asset: 11
+    current_quote: '102.20876545'
+- model: app_trade.pair
+  pk: 7
+  fields:
+    base_asset: 7
+    second_asset: 12
+    current_quote: '28.56780781'
+- model: app_trade.pair
+  pk: 8
+  fields:
+    base_asset: 7
+    second_asset: 6
+    current_quote: '1.20303224'
+- model: app_trade.pair
+  pk: 9
+  fields:
+    base_asset: 7
+    second_asset: 5
+    current_quote: '28.35387052'
+- model: app_trade.pair
+  pk: 10
+  fields:
+    base_asset: 7
+    second_asset: 9
+    current_quote: '2.39506598'
+- model: app_trade.pair
+  pk: 11
+  fields:
+    base_asset: 7
+    second_asset: 15
+    current_quote: '1.08080931'
+- model: app_trade.pair
+  pk: 12
+  fields:
+    base_asset: 7
+    second_asset: 4
+    current_quote: '2863.19385186'
+- model: app_trade.pair
+  pk: 13
+  fields:
+    base_asset: 7
+    second_asset: 8
+    current_quote: '0.30256190'
+- model: app_trade.pair
+  pk: 14
+  fields:
+    base_asset: 7
+    second_asset: 16
+    current_quote: '88.05044779'
+- model: app_trade.pair
+  pk: 15
+  fields:
+    base_asset: 7
+    second_asset: 17
+    current_quote: '90.87076874'

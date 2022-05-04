@@ -1,0 +1,148 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+  {% endif %}
+  {% if cl.formset or action_form %}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media.js }}
+    <script src="{% static 'chart.js' %}"></script>
+    {{ totals.spend_base_asset_per_token | json_script:"chart_data" }}
+    <script>
+        let colors = [
+          '#000000', '#263238', '#546e7a', '#78909c',
+          '#dd2c00', '#ff3d00', '#ff9e80', '#3e2723',
+          '#6d4c41', '#8d6e63', '#f57f17', '#f9a825',
+          '#e65100', '#fb8c00', '#1b5e20', '#388e3c',
+          '#33691e', '#8bc34a', '#827717', '#cddc39',
+          '#01579b', '#0288d1', '#03a9f4', '#4fc3f7',
+          '#006064', '#0097a7', '#004d40', '#6200ea',
+          '#7c4dff', '#b388ff', '#311b92', '#303f9f',
+          '#2196f3', '#0d47a1', '#d50000', '#ff1744',
+          '#ef5350', '#8e24aa', '#4a148c', '#e91e63'
+        ]
+
+        let data = JSON.parse(document.getElementById('chart_data').textContent)
+
+        window.addEventListener('DOMContentLoaded', () => {
+            Object.getOwnPropertyNames(data).map(base_asset => {
+                let el_div = document.createElement('div')
+                el_div.style.width = '400px'
+                let el_canvas = document.createElement('canvas')
+
+                document.getElementById('charts').appendChild(el_div)
+                el_div.appendChild(el_canvas)
+
+                new Chart(
+                    el_canvas,
+                    {
+                        type: 'pie',
+                        data: {
+                            labels: Object.entries(data[base_asset]).map(e => `${base_asset}/${e[0]}`),
+                            datasets: [
+                                {
+                                    label: base_asset,
+                                    data: Object.entries(data[base_asset]).map(e => e[1]),
+                                    backgroundColor: Object.entries(data[base_asset]).map(() => {
+                                        return colors[parseInt(Math.random() * colors.length) % colors.length]
+                                    })
+                                }
+                            ]
+                        },
+                    }
+                )
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+&rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+  <div id="content-main">
+    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+      <div class="changelist-form-container">
+        {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
+        <table>
+            <thead>
+                <tr>
+                    <td>Base asset</td>
+                    <td>Invest asset</td>
+                    <td>Average price</td>
+                    <td>Min price</td>
+                    <td>Max price</td>
+                    <td>Holdings amount<br>of invest asset</td>
+                    <td>Base asset spend total</td>
+                    <td>Calculated grow</td>
+                    <td>% of total<br>(by base asset)</td>
+                    <td>Active inputs</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        <td>{{ row.base_asset }}</td>
+                        <td>{{ row.second_asset }}</td>
+                        <td>{{ row.average_price }} {{ row.base_asset }}</td>
+                        <td>{{ row.min_price }} {{ row.base_asset }}</td>
+                        <td>{{ row.max_price }} {{ row.base_asset }}</td>
+                        <td>{{ row.invest_asset_amount }} {{ row.second_asset }}</td>
+                        <td>{{ row.base_asset_spend_total }} {{ row.base_asset }}</td>
+                        <td>{{ row.calculated_grow }}</td>
+                        <td>{{ row.percentage_of_total | floatformat:2 }}%</td>
+                        <td>{{ row.active_inputs }}</td>
+                    </tr>
+                {% endfor %}
+
+                <tr style="background-color: var(--breadcrumbs-bg); font-weight: bold;">
+                    <td>Totals:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {% for asset, amount in totals.spend_base_asset %}
+                            {{ amount }} {{ asset }}<br/>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for asset, amount in totals.calculated_grow_in_base_asset %}
+                            {{ amount }} {{ asset }}<br/>
+                        {% endfor %}
+                    </td>
+                    <td></td>
+                    <td>{{ totals.inputs }}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div id="charts" style="display: flex; justify-content: center"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
