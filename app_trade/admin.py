@@ -1,5 +1,10 @@
+from operator import invert
+from statistics import mode
+from tabnanny import verbose
 from django.contrib import admin
-from django.db.models import Q
+from django.db.models import Q, Model
+from django.shortcuts import redirect, render
+from typing import List
 
 from . import models
 from app_invest.models import Investition
@@ -35,6 +40,52 @@ class AssetAdmin(admin.ModelAdmin):
     )
 
 
+class InvestitionTotalsFake(Model):
+    class Meta:
+        managed = False
+        verbose_name = 'Investition totals'
+
+
+@admin.action(description='Calculate totals for ...')
+def calculate_totals_for(modeladmin, request, queryset: List[Investition]):
+    data = []
+
+    totals = {
+        'spend_base_asset': 0,
+        'current_price_in_base_asset': 0,
+        'grow_amount': 0
+    }
+
+
+    for investition in queryset:
+        data.append(investition)
+
+        if investition.sell_trade:
+            sell_sum = investition.sell_trade.total
+        else:
+            sell_sum = investition.calculated_grow_amount + investition.buy_trade.total
+
+        totals['spend_base_asset'] += investition.buy_trade.total
+        totals['current_price_in_base_asset'] += sell_sum
+
+    totals['grow_amount'] = totals['current_price_in_base_asset'] - totals['spend_base_asset']
+    totals['grow_percentage'] = ((totals['current_price_in_base_asset'] / totals['spend_base_asset']) - 1 ) * 100
+
+    return render(
+        request,
+        'admin/investitions/investition_totals.html',
+        {
+            'data': data,
+            'totals': totals,
+            'base_asset': investition.buy_trade.pair.base_asset,
+            'cl': {
+                'opts': InvestitionTotalsFake._meta
+            },
+            'opts': InvestitionTotalsFake._meta,
+        }
+    )
+
+
 @admin.register(Investition)
 class InvestitionAdmin(admin.ModelAdmin):
     list_display = (
@@ -48,6 +99,7 @@ class InvestitionAdmin(admin.ModelAdmin):
     )
 
     list_filter = 'buy_trade__pair',
+    actions = [calculate_totals_for]
 
     def fixed_grow_(self, obj: Investition):
         result = []

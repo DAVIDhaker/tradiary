@@ -1,0 +1,79 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+  {% endif %}
+  {% if cl.formset or action_form %}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+&rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+  <div id="content-main">
+    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+      <div class="changelist-form-container">
+        {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
+        <table>
+            <tbody>
+                <tr>
+                    <th colspan="2" style="text-align: center;">For trades</th>
+                </tr>
+                <tr>
+                    <th>Trade</th>
+                    <th>At</th>
+                </tr>
+
+                {% for trade in data %}
+                    <tr>
+                        <td>{{ trade.buy_trade }}</td>
+                        <td>{{ trade.buy_trade.transaction_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><br>
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ base_asset }} spend</th>
+                    <th>Current price in {{ base_asset }}</th>
+                    <th>Grow amount</th>
+                    <th>Grow percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>{{ totals.spend_base_asset|floatformat:2 }}</td>
+                    <td>{{ totals.current_price_in_base_asset|floatformat:2 }}</td>
+                    <td>{{ totals.grow_amount|floatformat:2 }} {{ base_asset }}</td>
+                    <td>{{ totals.grow_percentage|floatformat:3 }}%</td>
+                </tr>
+            </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

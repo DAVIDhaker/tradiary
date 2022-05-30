@@ -61,6 +61,9 @@ class Investition(models.Model):
     def calculated_grow_percentage(self) -> Optional[Decimal]:
         if not self.sell_trade and self.buy_trade.pair.current_quote:
             return (
-                self.buy_trade.amount * self.buy_trade.pair.current_quote
-                / self.buy_trade.amount * self.buy_trade.price
+                (
+                    (self.buy_trade.amount * self.buy_trade.pair.current_quote)
+                    / (self.buy_trade.amount * self.buy_trade.price)
+                    - 1
+                ) * 100
             )

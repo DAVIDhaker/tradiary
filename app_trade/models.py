@@ -68,24 +68,5 @@ class Trade(models.Model):
             self.SELL: 'Sold'
         }[self.side]
 
-        return f'{action} {float(self.amount)} {self.pair.second_asset} ' \
+        return f'{action} {float(self.amount)} {self.pair.second_asset} ({str(self.price).rstrip("0")} {self.pair.base_asset} per one) ' \
                f'for {float(self.amount * self.price)} {self.pair.base_asset}'
-
-
-
-# class Transaction(models.Model):
-#     """
-#     Operations of incomes or outcomes of capital.
-#     """
-#
-#     INCOME = 'INCOME'
-#     OUTCOME = 'OUTCOME'
-#
-#     at = models.DateTimeField(verbose_name='Happens at')
-#     type = models.CharField(max_length=3, choices=((INCOME, 'Income'), (OUTCOME, 'Outcome')), verbose_name='Type')
-#     asset = models.ForeignKey(Asset, on_delete=models.PROTECT, verbose_name='Asset')
-#     amount = models.DecimalField(max_digits=20, decimal_places=8, verbose_name='Amount')
-#
-#     def __str__(self):
-#         type = self.type
-#         return f'{type}'

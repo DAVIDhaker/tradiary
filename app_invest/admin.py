@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from django.contrib import admin
 from django.shortcuts import render
 from django.db import models
@@ -31,7 +31,7 @@ class APIDocsLinkView(admin.ModelAdmin):
 
     def get_urls(self):
         return [
-            url('', self.render, name='app_invest_fake_changelist')
+            re_path('', self.render, name='app_invest_fake_changelist')
         ]
 
     def render(self, request):
@@ -124,9 +124,6 @@ class APIDocsLinkView(admin.ModelAdmin):
                     totals['calculated_grow_in_base_asset'][base_asset_name] = grow_amount
 
         base_asset_distribution = {}
-
-        # for base_asset in totals['spend_base_asset_per_token']:
-        #     totals[base_asset]
 
         for pair in pairs:
             base_asset_name = str(data[pair]['pair'].base_asset)
